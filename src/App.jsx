@@ -7,6 +7,9 @@ function App() {
     nota: "",
   });
 
+  const initialState = JSON.parse(localStorage.getItem("notas")) ||[];
+  const [notas,setNotas] = useState(initialState);
+
   const handleInputChange = (event) => {
     // setInputState({
     //   titulo: event.target.value,
@@ -29,12 +32,26 @@ function App() {
   };
 
 
-  let Arreglonota = JSON.parse(localStorage.getItem("notas")) ||[];
+
 
   const handleClickGuardar = () => {
-    Arreglonota.push(inputState);
-    localStorage.setItem("notas", JSON.stringify(Arreglonota));
+    setNotas([...notas, inputState]);
+    localStorage.setItem("notas", JSON.stringify(notas));
     handleResetChange();
+  };
+  
+  const handleBorrarNota = (index) => {
+    const nuevoArreglo = [];
+
+    notas.forEach ((nota, i) => {
+      if ( index !== i ){
+
+         nuevoArreglo.push(nota)
+      }
+     
+    });
+    localStorage.setItem("notas", JSON.stringify(nuevoArreglo));
+    setNotas([...nuevoArreglo]);
   };
 
   return (
@@ -43,18 +60,28 @@ function App() {
         <div className="col p-4">
           <h3 className="text-center">Lista</h3>
           {
-            Arreglonota.length === 0 &&
+            notas.length === 0 &&
             "Al momento no tienes notas guardadas.  Puedes crear una en el formulario" 
              }
             {
-              Arreglonota.length !== 0 && ( 
+              notas.length !== 0 && ( 
               
                   <ol> 
-                  {Arreglonota.map((item) => {
+                  {notas.map((item, index) => {
                 return(
-                  <li>
+                  <li key={index}>
                     {item.titulo} <br></br> ({item.fecha}) <br></br>
-                  {item.nota}
+                  {item.nota} &nbsp;&nbsp;&nbsp;&nbsp;
+                  <i
+                  className="bi-x-circle-fill"
+                  onClick={() => handleBorrarNota(index)}
+                  style={{color: "red", 
+                  fontSize: "1rem",
+                  cursor: "pointer",
+                }}
+                  ></i>
+
+                  
                   
                   </li>
                   )
@@ -99,9 +126,8 @@ function App() {
           <br />
           <label style={{ width: "100%" }} htmlFor="nota">
             Input de Nota
-            <input
+            <textarea
               className="m-2"
-              type="text"
               id="nota"
               name="nota"
               onChange={handleInputChange}
