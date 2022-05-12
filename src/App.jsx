@@ -54,6 +54,11 @@ function App() {
     setNotas([...nuevoArreglo]);
   };
 
+  const handleClickLimpiarlista = () => {
+    setNotas([]);
+    localStorage.setItem("notas", JSON.stringify([]));
+  }
+
   return (
     <div className="App container">
       <div className="row bg-light p-3 rounded m-3">
@@ -91,9 +96,24 @@ function App() {
 
 
               }
+              <br></br>
+              <br></br>
+              <hr></hr>
+          <button
+        
+        onClick={handleClickLimpiarlista}
+        className="btn btn-outline-primary"
+        type="button"
+        disabled ={notas.length === 0}
+      >
+        
+         limpia listas
+        </button>
+              
             
           
         </div>
+        
         <div className="col mx-auto bg-light p-4">
           <h3 className="text-center">Notas</h3>
           <label style={{ width: "100%" }} htmlFor="titulo">
@@ -139,10 +159,16 @@ function App() {
           <div className="ms-2 me-2 mt-2 row">
             <div className="col">
             <div className="row mx-1">
+              
               <button
                 onClick={handleResetChange}
                 className="btn btn-outline-dark"
                 type="button"
+                disabled={
+                  inputState.titulo ==="" ||
+                  inputState.fecha ==="" ||
+                  inputState.nota ===""
+              }
               >
                 Limpiar
               </button>
@@ -154,6 +180,11 @@ function App() {
                 onClick={handleClickGuardar}
                 className="btn btn-outline-primary"
                 type="button"
+                disabled={
+                  inputState.titulo ==="" ||
+                  inputState.fecha ==="" ||
+                  inputState.nota ===""
+              }
               >
                 Guardar
               </button>
